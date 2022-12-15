@@ -2,12 +2,6 @@ import { useState, useEffect } from "react";
 
 import axios from "axios";
 
-const Button = (props) => {
-  return <button type="button">show</button>;
-};
-
-const Display = (props) => {};
-
 const Weather = (props) => {
   useEffect(() => {
     axios
