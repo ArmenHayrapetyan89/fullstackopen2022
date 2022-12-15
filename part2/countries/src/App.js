@@ -19,14 +19,14 @@ const Weather = (props) => {
     <div>
       {weatherObject.map((weatherData) => (
         <div>
-          <p>temperature {weatherData.main.temp}</p>
+          <p>temperature {weatherData.main.temp} celsius</p>
           <img
             src={`http://openweathermap.org/img/wn/${weatherData.weather.map(
               (weatherIcon) => weatherIcon.icon
             )}@2x.png`}
             alt="weather icon"
           />
-          <p>wind {weatherData.wind.speed}</p>
+          <p>wind {weatherData.wind.speed} m/s</p>
         </div>
       ))}
     </div>
