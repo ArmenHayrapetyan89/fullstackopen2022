@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const Filter = (props) => {
   return (
@@ -81,16 +82,16 @@ const Persons = (props) => {
 };
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", phoneNumber: "040-123456", id: 1 },
-    { name: "Ada Lovelace", phoneNumber: "39-44-5323523", id: 2 },
-    { name: "Dan Abramov", phoneNumber: "12-43-234345", id: 3 },
-    { name: "Mary Poppendieck", phoneNumber: "39-23-6423122", id: 4 },
-  ]);
-
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [showSearch, setShowSearch] = useState("");
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3001/persons")
+      .then((response) => setPersons(response.data));
+  }, []);
 
   const handleSearchChange = (event) => {
     setShowSearch(event.target.value);
@@ -149,89 +150,4 @@ const App = () => {
     </div>
   );
 };
-
-/*
-const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", phoneNumber: "040-123456", id: 1 },
-    { name: "Ada Lovelace", phoneNumber: "39-44-5323523", id: 2 },
-    { name: "Dan Abramov", phoneNumber: "12-43-234345", id: 3 },
-    { name: "Mary Poppendieck", phoneNumber: "39-23-6423122", id: 4 },
-  ]);
-
-  const [newName, setNewName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [showSearch, setShowSearch] = useState("");
-
-  const addPersons = (event) => {
-    event.preventDefault();
-    const personsObject = {
-      name: newName,
-      phoneNumber: phoneNumber,
-    };
-
-    const filteredName = persons.filter((person) => person.name === newName);
-
-    if (filteredName.length > 0) {
-      const errorMessage = `${newName} is already added to phonebook`;
-      setNewName("");
-      return alert(errorMessage);
-    }
-
-    setPersons(persons.concat(personsObject));
-    setNewName("");
-  };
-
-  const handlePeronsChange = (event) => {
-    setNewName(event.target.value);
-  };
-
-  const handlePhoneNumberChange = (event) => {
-    setPhoneNumber(event.target.value);
-  };
-
-  const handleSearchChange = (event) => {
-    setShowSearch(event.target.value);
-  };
-
-  const searchPersons = () => {
-    return persons.filter((person) =>
-      person.name.toLocaleLowerCase().includes(showSearch.toLocaleLowerCase())
-    );
-  };
-
-  const searchToShow = showSearch === "" ? persons : searchPersons();
-
-  return (
-    <div>
-      <h2>Phonebook</h2>
-      <p>
-        filter shown with{" "}
-        <input value={showSearch} onChange={handleSearchChange} />
-      </p>
-      <form onSubmit={addPersons}>
-        <div>
-          <p>
-            name: <input value={newName} onChange={handlePeronsChange} />
-          </p>
-          <p>
-            number:{" "}
-            <input value={phoneNumber} onChange={handlePhoneNumberChange} />
-          </p>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-
-      {searchToShow.map((person) => (
-        <p key={person.name}>
-          {person.name} {person.phoneNumber}
-        </p>
-      ))}
-    </div>
-  );
-};
-*/
 export default App;
