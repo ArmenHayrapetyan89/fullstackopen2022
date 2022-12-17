@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+
+import personsService from "./services/persons";
 
 const Filter = (props) => {
   return (
@@ -15,23 +16,42 @@ const Filter = (props) => {
 const PersonForm = (props) => {
   const addPersons = (event) => {
     event.preventDefault();
-    const personsObject = {
-      name: props.newName,
-      phoneNumber: props.phoneNumber,
-    };
 
-    const filteredName = props.persons.filter(
+    const filteredObject = props.persons.filter(
       (person) => person.name === props.newName
     );
 
-    if (filteredName.length > 0) {
-      const errorMessage = `${props.newName} is already added to phonebook`;
-      return alert(errorMessage);
-    }
+    if (filteredObject.length > 0) {
+      const errorMessage = `${props.newName} is already added to phonebook, replace the old number with a new one?`;
 
-    props.setPersons(props.persons.concat(personsObject));
-    props.setNewName("");
-    props.setPhoneNumber("");
+      if (window.confirm(`${errorMessage}`)) {
+        filteredObject.map(
+          (person) => (person.phoneNumber = props.phoneNumber)
+        );
+
+        const personObject = filteredObject.find((person) => person);
+        const id = personObject.id;
+
+        personsService.update(id, personObject).then((response) => {
+          props.setPersons(
+            props.persons.map((person) =>
+              person.id !== id ? person : response.data
+            )
+          );
+        });
+      }
+    } else {
+      const personsObject = {
+        name: props.newName,
+        phoneNumber: props.phoneNumber,
+      };
+
+      personsService.create(personsObject).then((response) => {
+        props.setPersons(props.persons.concat(response.data));
+        props.setNewName("");
+        props.setPhoneNumber("");
+      });
+    }
   };
 
   return (
@@ -59,6 +79,18 @@ const PersonForm = (props) => {
 };
 
 const Persons = (props) => {
+  const deletePerson = (id) => {
+    const personArray = props.persons.filter((person) => person.id === id);
+
+    const personName = personArray.map((person) => person.name);
+
+    if (window.confirm(`Delete ${personName} ?`)) {
+      personsService.deleteObject(id).then(() => {
+        props.setPersons(props.persons.filter((person) => person.id !== id));
+      });
+    }
+  };
+
   const searchPersons = () => {
     return props.persons.filter((person) =>
       person.name
@@ -73,9 +105,12 @@ const Persons = (props) => {
   return (
     <div>
       {searchToShow.map((person) => (
-        <p key={person.name}>
-          {person.name} {person.phoneNumber}
-        </p>
+        <div key={person.id}>
+          {person.name} {person.phoneNumber}{" "}
+          <button type="button" onClick={() => deletePerson(person.id)}>
+            delete
+          </button>
+        </div>
       ))}
     </div>
   );
@@ -88,9 +123,7 @@ const App = () => {
   const [showSearch, setShowSearch] = useState("");
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/persons")
-      .then((response) => setPersons(response.data));
+    personsService.getAll().then((response) => setPersons(response.data));
   }, []);
 
   const handleSearchChange = (event) => {
