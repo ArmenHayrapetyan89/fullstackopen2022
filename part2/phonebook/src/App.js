@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 
 import personsService from "./services/persons";
+import NotificationSuccessful from "./services/NotificationSuccessful";
+import NotificationError from "./services/NotificationError";
 
 const Filter = (props) => {
   return (
@@ -25,9 +27,7 @@ const PersonForm = (props) => {
       const errorMessage = `${props.newName} is already added to phonebook, replace the old number with a new one?`;
 
       if (window.confirm(`${errorMessage}`)) {
-        filteredObject.map(
-          (person) => (person.phoneNumber = props.phoneNumber)
-        );
+        filteredObject.map((person) => (person.number = props.number));
 
         const personObject = filteredObject.find((person) => person);
         const id = personObject.id;
@@ -43,13 +43,18 @@ const PersonForm = (props) => {
     } else {
       const personsObject = {
         name: props.newName,
-        phoneNumber: props.phoneNumber,
+        number: props.number,
       };
 
       personsService.create(personsObject).then((response) => {
         props.setPersons(props.persons.concat(response.data));
         props.setNewName("");
-        props.setPhoneNumber("");
+        props.setNumber("");
+
+        props.setSuccessMessage(`Added ${personsObject.name}`);
+        setTimeout(() => {
+          props.setSuccessMessage("");
+        }, 4000);
       });
     }
   };
@@ -65,7 +70,7 @@ const PersonForm = (props) => {
           <p>
             number:{" "}
             <input
-              value={props.phoneNumber}
+              value={props.number}
               onChange={props.handlePhoneNumberChange}
             />
           </p>
@@ -85,9 +90,19 @@ const Persons = (props) => {
     const personName = personArray.map((person) => person.name);
 
     if (window.confirm(`Delete ${personName} ?`)) {
-      personsService.deleteObject(id).then(() => {
-        props.setPersons(props.persons.filter((person) => person.id !== id));
-      });
+      personsService
+        .deleteObject(id)
+        .then(() => {
+          props.setPersons(props.persons.filter((person) => person.id !== id));
+        })
+        .catch((error) => {
+          props.setUnsuccessfulMessage(
+            `Information of ${personName} has already been removed from server`
+          );
+          setTimeout(() => {
+            props.setUnsuccessfulMessage("");
+          }, 4000);
+        });
     }
   };
 
@@ -106,7 +121,7 @@ const Persons = (props) => {
     <div>
       {searchToShow.map((person) => (
         <div key={person.id}>
-          {person.name} {person.phoneNumber}{" "}
+          {person.name} {person.number}{" "}
           <button type="button" onClick={() => deletePerson(person.id)}>
             delete
           </button>
@@ -119,8 +134,10 @@ const Persons = (props) => {
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [number, setNumber] = useState("");
   const [showSearch, setShowSearch] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [unsuccessfullMessage, setUnsuccessfulMessage] = useState("");
 
   useEffect(() => {
     personsService.getAll().then((response) => setPersons(response.data));
@@ -135,19 +152,21 @@ const App = () => {
   };
 
   const handlePhoneNumberChange = (event) => {
-    setPhoneNumber(event.target.value);
+    setNumber(event.target.value);
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <NotificationSuccessful message={successMessage} />
+      <NotificationError message={unsuccessfullMessage} />
       <Filter
         persons={persons}
         setPersons={setPersons}
         newName={newName}
         setNewName={setNewName}
-        phoneNumber={phoneNumber}
-        setPhoneNumber={setPhoneNumber}
+        number={number}
+        setNumber={setNumber}
         showSearch={showSearch}
         setShowSearch={setShowSearch}
         handleSearchChange={handleSearchChange}
@@ -160,13 +179,15 @@ const App = () => {
         setPersons={setPersons}
         newName={newName}
         setNewName={setNewName}
-        phoneNumber={phoneNumber}
-        setPhoneNumber={setPhoneNumber}
+        number={number}
+        setNumber={setNumber}
         showSearch={showSearch}
         setShowSearch={setShowSearch}
         handleSearchChange={handleSearchChange}
         handlePeronsChange={handlePeronsChange}
         handlePhoneNumberChange={handlePhoneNumberChange}
+        successMessage={successMessage}
+        setSuccessMessage={setSuccessMessage}
       />
 
       <h3>Numbers</h3>
@@ -175,10 +196,12 @@ const App = () => {
         setPersons={setPersons}
         newName={newName}
         setNewName={setNewName}
-        phoneNumber={phoneNumber}
-        setPhoneNumber={setPhoneNumber}
+        number={number}
+        setNumber={setNumber}
         showSearch={showSearch}
         setShowSearch={setShowSearch}
+        unsuccessfullMessage={unsuccessfullMessage}
+        setUnsuccessfulMessage={setUnsuccessfulMessage}
       />
     </div>
   );
