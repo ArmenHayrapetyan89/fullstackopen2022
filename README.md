@@ -1,4 +1,4 @@
-# Full Stack Open 2022
+# Fullstackopen 2022
 
 This is a course from University of Helsinki about modern web application development with a focus on single page applications.
 
