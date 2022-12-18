@@ -15,7 +15,7 @@ React router, custom hooks, styling app with CSS and webpack
 GraphQL  
 TypeScript  
 CI/CD  
-Containers 
+Containers  
 Using relational databases   
 
 https://fullstackopen.com/en/about  
