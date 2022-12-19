@@ -2,7 +2,7 @@
 
 This is a course from University of Helsinki about modern web application development with a focus on single page applications.
 
-Every part contains different exercises and you can find my solutions here.
+It has 13 parts and every part contains different exercises and you can find my solutions here.  
 
 Different technologies and topics in this course:
 
