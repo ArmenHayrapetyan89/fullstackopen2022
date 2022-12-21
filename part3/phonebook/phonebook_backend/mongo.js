@@ -35,7 +35,7 @@ if (password && !personName && !personNumber) {
 } else {
   mongoose
     .connect(url)
-    .then((result) => {
+    .then(() => {
       console.log("connected");
       const person = new Person({
         name: personName,

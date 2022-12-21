@@ -27,18 +27,30 @@ const PersonForm = (props) => {
       const errorMessage = `${props.newName} is already added to phonebook, replace the old number with a new one?`;
 
       if (window.confirm(`${errorMessage}`)) {
+        const oldNumber = filteredObject.map((person) => person.number);
+
         filteredObject.map((person) => (person.number = props.number));
 
         const personObject = filteredObject.find((person) => person);
+
         const id = personObject.id;
 
-        personsService.update(id, personObject).then((response) => {
-          props.setPersons(
-            props.persons.map((person) =>
-              person.id !== id ? person : personObject
-            )
-          );
-        });
+        personsService
+          .update(id, personObject)
+          .then((response) => {
+            props.setPersons(
+              props.persons.map((person) =>
+                person.id !== id ? person : personObject
+              )
+            );
+          })
+          .catch((error) => {
+            props.setUnsuccessfulMessage(`${error.response.data.error}`);
+            setTimeout(() => {
+              props.setUnsuccessfulMessage("");
+            }, 4000);
+            filteredObject.map((person) => (person.number = oldNumber));
+          });
       }
     } else {
       const personsObject = {
@@ -59,7 +71,12 @@ const PersonForm = (props) => {
             props.setSuccessMessage("");
           }, 4000);
         })
-        .catch((error) => console.log(error));
+        .catch((error) => {
+          props.setUnsuccessfulMessage(`${error.response.data.error}`);
+          setTimeout(() => {
+            props.setUnsuccessfulMessage("");
+          }, 4000);
+        });
     }
   };
 
@@ -192,6 +209,8 @@ const App = () => {
         handlePhoneNumberChange={handlePhoneNumberChange}
         successMessage={successMessage}
         setSuccessMessage={setSuccessMessage}
+        unsuccessfullMessage={unsuccessfullMessage}
+        setUnsuccessfulMessage={setUnsuccessfulMessage}
       />
 
       <h3>Numbers</h3>
