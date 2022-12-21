@@ -23,3 +23,5 @@ https://fullstackopen.com/en/about
 ------------------------------------  
 ## Part3  
 phonebook app: https://fullstackopen2022-part3-phonebookapp.up.railway.app/  
+  
+### Technologies: React, NodeJS/Express, MongoDB  
