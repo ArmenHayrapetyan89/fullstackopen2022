@@ -12,7 +12,7 @@ const requestLogger = (request, response, next) => {
   console.log("---");
   next();
 };
-
+app.use(express.static("build"));
 app.use(express.json());
 app.use(requestLogger);
 
@@ -73,13 +73,6 @@ app.post(
   morgan(":method :url :status :res[content-length] - :response-time ms :body"),
   (request, response, next) => {
     const body = request.body;
-
-    /*if (!body.number) {
-      return response.status(400).json({ error: "number is missing" });
-    } else if (!body.name) {
-      return response.status(400).json({ error: "name is missing" });
-    }*/
-
     const person = new Person({
       name: body.name,
       number: body.number,
