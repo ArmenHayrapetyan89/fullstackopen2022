@@ -25,3 +25,4 @@ https://fullstackopen.com/en/about
 phonebook app: https://fullstackopen2022-part3-phonebookapp.up.railway.app/  
   
 ### Technologies: React, NodeJS/Express, MongoDB  
+I used railway.app to deploy my application  
