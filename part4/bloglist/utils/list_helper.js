@@ -1,3 +1,11 @@
+const Blog = require("../models/blog");
+
+const initialBlogs = [
+  { title: "Test1", author: "Test1", url: "http://test1blog.org", likes: 30 },
+  { title: "Test2", author: "Test2", url: "http://test2blog.org", likes: 20 },
+  { title: "Test3", author: "Test3", url: "http://test3blog.org", likes: 10 },
+];
+
 const totalLikes = (blogs) => {
   return blogs.reduce(
     (accumulator, currentValue) => accumulator + currentValue.likes,
@@ -48,9 +56,17 @@ const mostLikes = (blogs) => {
   authorWithMaxLikesObject = { author: maxAuthor, likes: maxValue };
   return authorWithMaxLikesObject;
 };
+
+const blogInDB = async () => {
+  const blogs = await Blog.find({});
+  return blogs.map((blog) => blog.toJSON());
+};
+
 module.exports = {
   totalLikes,
   favoriteBlog,
   mostBlogs,
   mostLikes,
+  blogInDB,
+  initialBlogs,
 };

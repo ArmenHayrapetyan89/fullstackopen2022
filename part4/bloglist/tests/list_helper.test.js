@@ -1,4 +1,16 @@
 const listHelper = require("../utils/list_helper");
+const supertest = require("supertest");
+const mongoose = require("mongoose");
+const app = require("../app");
+
+const api = supertest(app);
+
+const Blog = require("../models/blog");
+
+beforeEach(async () => {
+  await Blog.deleteMany({});
+  await Blog.insertMany(listHelper.initialBlogs);
+});
 
 const blogs = [
   {
@@ -51,6 +63,94 @@ const blogs = [
   },
 ];
 
+describe("http requests", () => {
+  test("http GET request: ", async () => {
+    const response = await api.get("/api/blogs");
+    expect(response.body).toHaveLength(response.body.length);
+  });
+
+  test("test for id property: ", async () => {
+    const response = await api.get("/api/blogs");
+    expect(response.body[0].id).toBeDefined();
+  });
+
+  test("http POST request: ", async () => {
+    const newBlog = {
+      title: "TestPost",
+      author: "Test",
+      url: "www.test.com",
+      likes: 30,
+    };
+
+    await api
+      .post("/api/blogs")
+      .send(newBlog)
+      .expect(201)
+      .expect("Content-Type", /application\/json/);
+
+    const blogInDB = await listHelper.blogInDB();
+    expect(blogInDB).toHaveLength(listHelper.initialBlogs.length + 1);
+  });
+
+  test("http POST default like value: ", async () => {
+    const newBlog = {
+      title: "TestPost",
+      author: "Test",
+      url: "www.test.com",
+    };
+
+    await api
+      .post("/api/blogs")
+      .send(newBlog)
+      .expect("Content-Type", /application\/json/);
+
+    const blogInDB = await listHelper.blogInDB();
+    expect(blogInDB[blogInDB.length - 1].likes).toBe(0);
+  });
+
+  test("http POST verify for title and url: ", async () => {
+    const newBlog = {
+      author: "Test",
+    };
+
+    await api.post("/api/blogs").send(newBlog).expect(400);
+  });
+
+  test("http DELETE request: ", async () => {
+    const blogsAtStart = await listHelper.blogInDB();
+    const blogToDelete = blogsAtStart[0];
+
+    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+
+    const blogsAfterDeletion = await listHelper.blogInDB();
+
+    expect(blogsAfterDeletion).toHaveLength(listHelper.initialBlogs.length - 1);
+
+    const ids = blogsAfterDeletion.map((blog) => blog.id);
+
+    expect(ids).not.toContain(blogToDelete.id);
+  });
+
+  test("http PUT request: ", async () => {
+    const blogsAtStart = await listHelper.blogInDB();
+    const blogToUpdate = blogsAtStart[0];
+
+    const newLikes = 10000;
+    blogToUpdate.likes = newLikes;
+
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(blogToUpdate)
+      .expect(200);
+
+    const blogsAfterUpdate = await listHelper.blogInDB();
+
+    const likes = blogsAfterUpdate.map((blog) => blog.likes);
+
+    expect(likes).toContain(newLikes);
+  });
+});
+
 describe("total likes", () => {
   test("when list has no blog entries, equals the likes of that", () => {
     const emptyBlog = [];
@@ -101,4 +201,8 @@ describe("author with most likes", () => {
       likes: 17,
     });
   });
+});
+
+afterAll(() => {
+  mongoose.connection.close();
 });
