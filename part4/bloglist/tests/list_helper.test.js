@@ -6,11 +6,8 @@ const app = require("../app");
 const api = supertest(app);
 
 const Blog = require("../models/blog");
-
-beforeEach(async () => {
-  await Blog.deleteMany({});
-  await Blog.insertMany(listHelper.initialBlogs);
-});
+const User = require("../models/user");
+const bcrypt = require("bcrypt");
 
 const blogs = [
   {
@@ -64,6 +61,11 @@ const blogs = [
 ];
 
 describe("http requests", () => {
+  beforeEach(async () => {
+    await Blog.deleteMany({});
+    await Blog.insertMany(listHelper.initialBlogs);
+  });
+
   test("http GET request: ", async () => {
     const response = await api.get("/api/blogs");
     expect(response.body).toHaveLength(response.body.length);
@@ -203,6 +205,58 @@ describe("author with most likes", () => {
   });
 });
 
+describe("When one user is in db", () => {
+  beforeEach(async () => {
+    await User.deleteMany({});
+    const passwordHash = await bcrypt.hash("secret", 10);
+    const user = new User({ username: "root", passwordHash });
+
+    await user.save();
+  });
+
+  test("creation succeeds with a fresh username", async () => {
+    const usersAtStart = await listHelper.usersInDb();
+
+    const newUser = {
+      username: "hsimpson",
+      name: "Homer Simpson",
+      password: "password",
+    };
+
+    await api
+      .post("/api/users")
+      .send(newUser)
+      .expect(201)
+      .expect("Content-Type", /application\/json/);
+
+    const usersAtEnd = await listHelper.usersInDb();
+    expect(usersAtEnd).toHaveLength(usersAtStart.length + 1);
+
+    const usernames = usersAtEnd.map((user) => user.username);
+    expect(usernames).toContain(newUser.username);
+  });
+
+  test("creation fails with proper statuscode and message if username already taken ", async () => {
+    const usersAtStart = await listHelper.usersInDb();
+
+    const newUser = {
+      username: "root",
+      name: "Superuser",
+      password: "secret",
+    };
+
+    const result = await api
+      .post("/api/users")
+      .send(newUser)
+      .expect(400)
+      .expect("Content-Type", /application\/json/);
+
+    expect(result.body.error).toContain("username must be unique");
+
+    const usersAtEnd = await listHelper.usersInDb();
+    expect(usersAtEnd).toEqual(usersAtStart);
+  });
+});
 afterAll(() => {
   mongoose.connection.close();
 });
