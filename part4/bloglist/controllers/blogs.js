@@ -14,14 +14,14 @@ blogsRouter.get("/", async (request, response) => {
   response.json(blogs);
 });
 
-blogsRouter.post("/", async (request, response) => {
+blogsRouter.post("/", middleware.userExtractor, async (request, response) => {
   const body = request.body;
-  const decodedToken = jwt.verify(request.token, process.env.SECRET);
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: "token missing or invalid" });
+
+  if (!(body.title || body.url)) {
+    return response.status(400).json({ error: "title and url are required!" });
   }
 
-  const user = await User.findById(decodedToken.id);
+  const user = request.user;
 
   const blog = new Blog({
     title: body.title,
@@ -40,37 +40,35 @@ blogsRouter.post("/", async (request, response) => {
   response.status(201).json(savedBlog);
 });
 
-blogsRouter.delete("/:id", async (request, response) => {
-  const decodedToken = jwt.verify(request.token, process.env.SECRET);
+blogsRouter.delete(
+  "/:id",
+  middleware.userExtractor,
+  async (request, response) => {
+    const user = request.user;
+    const blog = user.blogs.filter(
+      (blog) => blog._id.toString() === request.params.id
+    );
 
-  console.log("DECODEDTOKEN: ", decodedToken);
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: "token missing or invalid" });
+    if (blog.length == 0) {
+      return response
+        .status(401)
+        .json({ error: "This user has no blogs or the wrong token" });
+    }
+
+    const [blogId] = blog;
+
+    const foundBlog = await Blog.findById(blogId._id.toString());
+
+    if (foundBlog != null && foundBlog.user.toString() === user.id) {
+      await Blog.findByIdAndRemove(request.params.id);
+      response.status(204).end();
+    } else {
+      return response
+        .status(404)
+        .json({ error: `No blog with id: ${request.params.id}` });
+    }
   }
-
-  const user = await User.findById(decodedToken.id);
-
-  const blog = user.blogs.filter(
-    (blog) => blog._id.toString() === request.params.id
-  );
-
-  console.log("BLOG:::::::::", blog);
-
-  if (blog.length == 0) {
-    return response
-      .status(401)
-      .json({ error: "This user has no blogs or the wrong token" });
-  }
-
-  const [blogId] = blog;
-
-  const foundBlog = await Blog.findById(blogId._id.toString());
-
-  if (foundBlog.user.toString() === decodedToken.id) {
-    await Blog.findByIdAndRemove(request.params.id);
-    response.status(204).end();
-  }
-});
+);
 
 blogsRouter.put("/:id", async (request, response) => {
   await Blog.findByIdAndUpdate(request.params.id, request.body);
@@ -78,9 +76,3 @@ blogsRouter.put("/:id", async (request, response) => {
 });
 
 module.exports = blogsRouter;
-
-/**{
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhzaW1wc29uIiwiaWQiOiI2M2E3MjcxNzE5OTM3N2QxODNhZWJlNDQiLCJpYXQiOjE2NzE5MDU0ODF9.MpkMh8eMgcj8QLcjyn9g_4MsjOwtMCsprl8gsOVheYY",
-    "username": "hsimpson",
-    "name": "Homer Simpson"
-} */
