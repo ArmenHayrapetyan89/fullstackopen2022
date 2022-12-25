@@ -240,7 +240,6 @@ describe("http requests", () => {
 
     const token = response.body.token;
 
-    console.log("TOKEN: ", token);
     const newBlog = {
       author: "Test",
     };
@@ -255,32 +254,6 @@ describe("http requests", () => {
   });
 
   test("http DELETE request: ", async () => {
-    /*const usersAtStart = await listHelper.usersInDb();
-
-    const newUser = {
-      username: "hsimpson",
-      name: "Homer Simpson",
-      password: "secret",
-    };
-
-    await api
-      .post("/api/users")
-      .send(newUser)
-      .expect(201)
-      .expect("Content-Type", /application\/json/);
-
-    const usersAtEnd = await listHelper.usersInDb();
-    expect(usersAtEnd).toHaveLength(usersAtStart.length + 1);
-
-    const usernames = usersAtEnd.map((user) => user.username);
-    expect(usernames).toContain(newUser.username);
-
-    const response = await api.post("/api/login").send({
-      username: "hsimpson",
-      name: "Homer Simpson",
-      password: "secret",
-    });*/
-
     const response = await api.post("/api/login").send({
       username: "root",
       password: "secret",
