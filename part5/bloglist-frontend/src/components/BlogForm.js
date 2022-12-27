@@ -2,6 +2,7 @@ import Blog from "./Blog";
 import blogService from "../services/blogs";
 import Notification from "../components/Notification";
 
+//
 const BlogForm = (props) => {
   const logoutChange = () => {
     window.localStorage.removeItem("loggedBlogUser");
