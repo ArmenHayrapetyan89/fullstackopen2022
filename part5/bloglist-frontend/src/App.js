@@ -16,6 +16,7 @@ const App = () => {
   const [newAuthor, setNewAuthor] = useState("");
   const [newUrl, setNewUrl] = useState("");
   const [cssClass, setCssClass] = useState("");
+  const [blogVisible, setBlogVisible] = useState(false);
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -89,6 +90,8 @@ const App = () => {
           setErrorMessage={setErrorMessage}
           cssClass={cssClass}
           setCssClass={setCssClass}
+          blogVisible={blogVisible}
+          setBlogVisible={setBlogVisible}
         />
       )}
     </div>

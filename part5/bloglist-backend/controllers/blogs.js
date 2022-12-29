@@ -70,9 +70,32 @@ blogsRouter.delete(
   }
 );
 
-blogsRouter.put("/:id", async (request, response) => {
-  await Blog.findByIdAndUpdate(request.params.id, request.body);
-  response.status(200).end();
+blogsRouter.put("/:id", middleware.userExtractor, async (request, response) => {
+  const user = request.user;
+  const blog = user.blogs.filter(
+    (blog) => blog._id.toString() === request.params.id
+  );
+
+  if (blog.length == 0) {
+    return response
+      .status(401)
+      .json({ error: "This user has no blogs or the wrong token" });
+  }
+
+  const [blogId] = blog;
+
+  const foundBlog = await Blog.findById(blogId._id.toString());
+
+  foundBlog.likes = request.body.likes;
+
+  if (foundBlog != null && foundBlog.user.toString() === user.id) {
+    await Blog.findByIdAndUpdate(request.params.id, foundBlog);
+    response.status(200).end();
+  } else {
+    return response
+      .status(404)
+      .json({ error: `No blog with id: ${request.params.id}` });
+  }
 });
 
 module.exports = blogsRouter;
