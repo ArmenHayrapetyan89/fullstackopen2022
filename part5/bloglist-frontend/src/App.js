@@ -12,11 +12,7 @@ const App = () => {
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
-  const [newTitle, setNewTitle] = useState("");
-  const [newAuthor, setNewAuthor] = useState("");
-  const [newUrl, setNewUrl] = useState("");
   const [cssClass, setCssClass] = useState("");
-  const [blogVisible, setBlogVisible] = useState(false);
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -80,18 +76,10 @@ const App = () => {
           handleBlogChange={handleBlogChange}
           user={user}
           setUser={setUser}
-          newTitle={newTitle}
-          setNewTitle={setNewTitle}
-          newAuthor={newAuthor}
-          setNewAuthor={setNewAuthor}
-          newUrl={newUrl}
-          setNewUrl={setNewUrl}
           errorMessage={errorMessage}
           setErrorMessage={setErrorMessage}
           cssClass={cssClass}
           setCssClass={setCssClass}
-          blogVisible={blogVisible}
-          setBlogVisible={setBlogVisible}
         />
       )}
     </div>

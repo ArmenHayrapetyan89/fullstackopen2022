@@ -1,10 +1,20 @@
 import Blog from "./Blog";
 import blogService from "../services/blogs";
 import Notification from "../components/Notification";
+import { useState } from "react";
 
 const BlogForm = (props) => {
-  const hideWhenVisible = { display: props.blogVisible ? "none" : "" };
-  const showWhenVisible = { display: props.blogVisible ? "" : "none" };
+  const [newTitle, setNewTitle] = useState("");
+  const [newAuthor, setNewAuthor] = useState("");
+  const [newUrl, setNewUrl] = useState("");
+  const [blogVisible, setBlogVisible] = useState(false);
+
+  const hideWhenVisible = {
+    display: blogVisible ? "none" : "",
+  };
+  const showWhenVisible = {
+    display: blogVisible ? "" : "none",
+  };
 
   const logoutChange = () => {
     window.localStorage.removeItem("loggedBlogUser");
@@ -12,47 +22,50 @@ const BlogForm = (props) => {
   };
 
   const createNewBlog = async (event) => {
-    if (props.blogVisible) {
-      event.preventDefault();
-
+    event.preventDefault();
+    if (blogVisible) {
       const newBlogObject = {
-        title: props.newTitle,
-        author: props.newAuthor,
-        url: props.newUrl,
+        title: newTitle,
+        author: newAuthor,
+        url: newUrl,
       };
 
-      try {
-        const newBlog = await blogService.create(newBlogObject);
-        props.setBlogs(props.blogs.concat(newBlog));
+      if (props.user) {
+        console.log("GEHST DU HIER REIN?");
+        try {
+          const newBlog = await blogService.create(newBlogObject);
+          props.setBlogs(props.blogs.concat(newBlog));
+          console.log("NEW BLOG: ", newBlog);
 
-        props.setNewTitle("");
-        props.setNewAuthor("");
-        props.setNewUrl("");
+          setNewTitle("");
+          setNewAuthor("");
+          setNewUrl("");
 
-        props.setErrorMessage(
-          `a new blog ${props.newTitle} by ${props.newAuthor} added`
-        );
-        props.setCssClass("success");
-        setTimeout(() => {
-          props.setErrorMessage(null);
-        }, 5000);
-      } catch (exception) {
-        props.setCssClass("error");
-        setTimeout(() => {
-          props.setErrorMessage(null);
-        }, 5000);
+          props.setErrorMessage(`a new blog ${newTitle} by ${newAuthor} added`);
+          props.setCssClass("success");
+          setTimeout(() => {
+            props.setErrorMessage(null);
+          }, 5000);
+        } catch (exception) {
+          props.setCssClass("error");
+          setTimeout(() => {
+            props.setErrorMessage(null);
+          }, 5000);
+        }
       }
+    } else {
+      props.createBlog({ title: newTitle, author: newAuthor, url: newUrl });
     }
   };
 
   return (
-    <div>
+    <div className="formDiv">
       <h2>Blogs</h2>
       <Notification cssClass={props.cssClass} message={props.errorMessage} />
-      <div>{props.user.username} logged in</div>
+      <div>{props.user ? props.user.username : ""} logged in</div>
       <h2>create new</h2>
       <div style={hideWhenVisible}>
-        <button onClick={() => props.setBlogVisible(true)}>
+        <button className="create-button" onClick={() => setBlogVisible(true)}>
           create new blog
         </button>
       </div>
@@ -62,47 +75,45 @@ const BlogForm = (props) => {
             title:
             <input
               type="text"
-              value={props.newTitle}
+              value={newTitle}
               name="Title"
-              onChange={({ target }) => props.setNewTitle(target.value)}
+              onChange={({ target }) => setNewTitle(target.value)}
+              className="title-field"
             />
           </div>
           <div>
             author:
             <input
               type="text"
-              value={props.newAuthor}
+              value={newAuthor}
               name="Author"
-              onChange={({ target }) => props.setNewAuthor(target.value)}
+              onChange={({ target }) => setNewAuthor(target.value)}
+              className="author-field"
             />
           </div>
           <div>
             url:
             <input
               type="text"
-              value={props.newUrl}
+              value={newUrl}
               name="Url"
-              onChange={({ target }) => props.setNewUrl(target.value)}
+              onChange={({ target }) => setNewUrl(target.value)}
+              className="url-field"
             />
           </div>
-          <button type="submit">create</button>
-          <button onClick={() => props.setBlogVisible(false)}>cancel</button>
+          <button className="create-blog-button" type="submit">
+            create
+          </button>
+          <button onClick={() => setBlogVisible(false)}>cancel</button>
         </form>
       </div>
 
       {props.blogs
-        .sort((firstLike, secondLike) => secondLike.likes - firstLike.likes)
-        .map((blog) => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            showAllBlogInformation={props.showAllBlogInformation}
-            setShowAllBlogInformation={props.setShowAllBlogInformation}
-            blogs={props.blogs}
-            setBlogs={props.setBlogs}
-          />
-        ))}
-
+        ? props.blogs.sort((firstLike, secondLike) => secondLike.likes - firstLike.likes).map((blog) => (<Blog key={blog.id} blog={blog}
+          showAllBlogInformation={props.showAllBlogInformation}
+          setShowAllBlogInformation={props.setShowAllBlogInformation}
+          blogs={props.blogs}
+          setBlogs={props.setBlogs}/>)) : ""}
       <button
         type="submit"
         onClick={() => {

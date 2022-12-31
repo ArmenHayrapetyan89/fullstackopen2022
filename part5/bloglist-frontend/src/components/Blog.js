@@ -21,18 +21,14 @@ const Blog = (props) => {
     setShowAllBlogInformation(!showAllBlogInformation);
   };
 
-  const increaseLikes = () => {
-    setLike(like + 1);
-
-    const newBlog = { ...props.blog, likes: like + 1 };
-
-    blogService.update(props.blog.id, newBlog);
-  };
-
   const isLoggedUser = () => {
     const loggedUser = JSON.parse(
       window.localStorage.getItem("loggedBlogUser")
     );
+
+    if (loggedUser === null) {
+      return false;
+    }
 
     const userExists =
       props.blog.user === undefined || props.blog.user === null
@@ -40,6 +36,16 @@ const Blog = (props) => {
         : loggedUser.username === props.blog.user.username;
 
     return userExists;
+  };
+
+  const increaseLikes = () => {
+    setLike(like + 1);
+
+    if (isLoggedUser()) {
+      const newBlog = { ...props.blog, likes: like + 1 };
+
+      blogService.update(props.blog.id, newBlog);
+    }
   };
 
   const removeBlog = () => {
@@ -63,16 +69,16 @@ const Blog = (props) => {
   return (
     <div>
       <div style={blogStyle} key={props.blog.id}>
-        <div>
+        <div className="title-author">
           {props.blog.title} {props.blog.author}
           <button onClick={toggleVisibility}>
             {showAllBlogInformation ? "hide" : "view"}
           </button>
         </div>
-        <div style={viewShowHide}>
-          <p>{props.blog.url}</p>
+        <div className="full-blog" style={viewShowHide}>
+          <p>{props.blog.url} </p>
           <p>
-            likes {like}
+            likes <span className="likesContent">{like}</span>{" "}
             <button
               onClick={() => {
                 increaseLikes();
@@ -80,6 +86,17 @@ const Blog = (props) => {
             >
               like
             </button>
+            {/*isLoggedUser() ? (
+              <button
+                onClick={() => {
+                  increaseLikes();
+                }}
+              >
+                like
+              </button>
+            ) : (
+              ""
+            )*/}
           </p>
           <p>
             {props.blog.user === undefined || props.blog.user === null
