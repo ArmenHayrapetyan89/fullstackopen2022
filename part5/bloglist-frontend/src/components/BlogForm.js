@@ -23,6 +23,7 @@ const BlogForm = (props) => {
 
   const createNewBlog = async (event) => {
     event.preventDefault();
+
     if (blogVisible) {
       const newBlogObject = {
         title: newTitle,
@@ -31,11 +32,9 @@ const BlogForm = (props) => {
       };
 
       if (props.user) {
-        console.log("GEHST DU HIER REIN?");
         try {
           const newBlog = await blogService.create(newBlogObject);
           props.setBlogs(props.blogs.concat(newBlog));
-          console.log("NEW BLOG: ", newBlog);
 
           setNewTitle("");
           setNewAuthor("");
@@ -109,11 +108,20 @@ const BlogForm = (props) => {
       </div>
 
       {props.blogs
-        ? props.blogs.sort((firstLike, secondLike) => secondLike.likes - firstLike.likes).map((blog) => (<Blog key={blog.id} blog={blog}
-          showAllBlogInformation={props.showAllBlogInformation}
-          setShowAllBlogInformation={props.setShowAllBlogInformation}
-          blogs={props.blogs}
-          setBlogs={props.setBlogs}/>)) : ""}
+        ? props.blogs
+            .sort((firstLike, secondLike) => secondLike.likes - firstLike.likes)
+            .map((blog) => (
+              <Blog
+                key={blog.id}
+                blog={blog}
+                showAllBlogInformation={props.showAllBlogInformation}
+                setShowAllBlogInformation={props.setShowAllBlogInformation}
+                blogs={props.blogs}
+                setBlogs={props.setBlogs}
+                className="blog"
+              />
+            ))
+        : ""}
       <button
         type="submit"
         onClick={() => {

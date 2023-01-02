@@ -30,7 +30,7 @@ blogsRouter.post("/", middleware.userExtractor, async (request, response) => {
     likes: body.likes,
     user: user._id,
   });
-
+  
   const savedBlog = await blog.save();
 
   user.blogs = user.blogs.concat(savedBlog._id);

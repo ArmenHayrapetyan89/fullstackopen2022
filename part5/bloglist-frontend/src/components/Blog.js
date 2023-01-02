@@ -35,6 +35,7 @@ const Blog = (props) => {
         ? false
         : loggedUser.username === props.blog.user.username;
 
+    console.log("USER EXISTS: ", userExists);
     return userExists;
   };
 
@@ -71,7 +72,7 @@ const Blog = (props) => {
       <div style={blogStyle} key={props.blog.id}>
         <div className="title-author">
           {props.blog.title} {props.blog.author}
-          <button onClick={toggleVisibility}>
+          <button className="view-hide-button" onClick={toggleVisibility}>
             {showAllBlogInformation ? "hide" : "view"}
           </button>
         </div>
@@ -79,7 +80,7 @@ const Blog = (props) => {
           <p>{props.blog.url} </p>
           <p>
             likes <span className="likesContent">{like}</span>{" "}
-            <button
+            <button className="like-button"
               onClick={() => {
                 increaseLikes();
               }}
@@ -104,7 +105,7 @@ const Blog = (props) => {
               : props.blog.user.username}
           </p>
           {isLoggedUser() ? (
-            <button onClick={() => removeBlog()}>remove</button>
+            <button className="delete-blog" onClick={() => removeBlog()}>remove</button>
           ) : (
             ""
           )}
