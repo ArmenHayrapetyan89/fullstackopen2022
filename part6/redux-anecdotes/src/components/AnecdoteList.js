@@ -5,6 +5,7 @@ import {
   clearNotification,
 } from "../reducers/notificationReducer";
 
+import { updateVote } from "../reducers/anecdoteReducer";
 const AnecdoteList = () => {
   const anecdotes = useSelector((state) => state.anecdotes);
   const filters = useSelector((state) => state.filters);
@@ -18,12 +19,8 @@ const AnecdoteList = () => {
   const dispatch = useDispatch();
 
   const vote = (anecdote) => {
-    //dispatch({ type: "VOTE", id: anecdote.id });
-    dispatch(voteAnecdote(anecdote.id));
-
-    dispatch(setNotification(`you voted '${anecdote.content}'`));
-
-    setTimeout(() => dispatch(clearNotification()), 5000);
+    dispatch(updateVote(anecdote));
+    dispatch(setNotification(`you voted '${anecdote.content}'`, 10));
   };
 
   const sortedAnecdotes = (anecdotes) => {
