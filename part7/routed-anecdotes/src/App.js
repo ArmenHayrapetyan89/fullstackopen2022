@@ -8,6 +8,8 @@ import {
   useNavigate,
 } from "react-router-dom";
 
+import { useField } from "./hooks/index";
+
 const Menu = (props) => {
   const padding = {
     paddingRight: 5,
@@ -104,21 +106,28 @@ const Footer = () => (
 );
 
 const CreateNew = (props) => {
-  const [content, setContent] = useState("");
-  const [author, setAuthor] = useState("");
-  const [info, setInfo] = useState("");
+  const { reset: resetContent, ...restContentHook } = useField("content");
+  const { reset: resetAuthor, ...restAuthorHook } = useField("author");
+  const { reset: resetInfo, ...restInfoHook } = useField("info");
+
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     props.addNew({
-      content,
-      author,
-      info,
+      content: restContentHook.value,
+      author: restAuthorHook.value,
+      info: restInfoHook.value,
       votes: 0,
     });
 
     navigate("/");
+  };
+
+  const resetFields = () => {
+    resetContent();
+    resetAuthor();
+    resetInfo();
   };
 
   return (
@@ -127,29 +136,20 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input
-            name="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-          />
+          <input {...restContentHook} />
         </div>
         <div>
           author
-          <input
-            name="author"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
-          />
+          <input {...restAuthorHook} />
         </div>
         <div>
           url for more info
-          <input
-            name="info"
-            value={info}
-            onChange={(e) => setInfo(e.target.value)}
-          />
+          <input {...restInfoHook} />
         </div>
-        <button>create</button>
+        <button type="submit">create</button>
+        <button type="button" onClick={resetFields}>
+          reset
+        </button>
       </form>
     </div>
   );
