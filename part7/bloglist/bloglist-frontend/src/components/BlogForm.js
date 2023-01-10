@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setNotification } from "../reducers/notificationReducer";
 
 import { createBlog, initializeBlogPosts } from "../reducers/blogReducer";
+import { logoutUser } from "../reducers/userReducer";
 
 const BlogForm = (props) => {
   const [newTitle, setNewTitle] = useState("");
@@ -13,6 +14,8 @@ const BlogForm = (props) => {
   const [blogVisible, setBlogVisible] = useState(false);
 
   const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.users.user);
 
   useEffect(() => {
     dispatch(initializeBlogPosts());
@@ -28,15 +31,15 @@ const BlogForm = (props) => {
   };
 
   const logoutChange = () => {
+    dispatch(logoutUser(null));
     window.localStorage.removeItem("loggedBlogUser");
-    props.setUser(null);
   };
 
   const createNewBlog = async (event) => {
     event.preventDefault();
 
     if (blogVisible) {
-      if (props.user) {
+      if (user) {
         try {
           dispatch(createBlog(newTitle, newAuthor, newUrl));
 
@@ -68,13 +71,8 @@ const BlogForm = (props) => {
     <div className="formDiv">
       <h2>Blogs</h2>
       <Notification cssClass={props.cssClass} />
-      <div>{props.user ? props.user.username : ""} logged in</div>
-      <button
-        type="submit"
-        onClick={() => {
-          logoutChange();
-        }}
-      >
+      <div>{user ? user.username : ""} logged in</div>
+      <button type="submit" onClick={logoutChange}>
         logout
       </button>
       <h2>create new</h2>
