@@ -1,50 +1,48 @@
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { deleteBlog, likeBlog } from "../reducers/blogReducer";
-import { useSelector } from "react-redux";
+//import { useState } from "react";
+//import { deleteBlog, likeBlog } from "../reducers/blogReducer";
+//import { useSelector } from "react-redux";
+
+import { useParams } from "react-router-dom";
+import { likeBlog } from "../reducers/blogReducer";
 
 const Blog = (props) => {
-  const [showAllBlogInformation, setShowAllBlogInformation] = useState(false);
+  const id = useParams().id;
 
-  const loggedUser = useSelector((state) => state.user.user);
+  if (!props.blogs || props.blogs === 0) {
+    return <div>Loading...</div>;
+  }
 
-  const dispatch = useDispatch();
+  const blog = props.blogs.find((blog) => blog.id === id);
 
-  const blogStyle = {
+  console.log("BLOG: ", blog);
+
+  if (!blog) {
+    return <div>Loading...</div>;
+  }
+
+  //const [showAllBlogInformation, setShowAllBlogInformation] = useState(false);
+
+  //const loggedUser = useSelector((state) => state.user.user);
+
+  /*const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
     border: "solid",
     borderWidth: 1,
     marginBottom: 5,
-  };
+  };*/
 
-  const viewShowHide = {
+  /*const viewShowHide = {
     display: showAllBlogInformation ? "" : "none",
-  };
+  };*/
 
-  const toggleVisibility = () => {
+  /*const toggleVisibility = () => {
     setShowAllBlogInformation(!showAllBlogInformation);
-  };
+  };*/
 
-  const isLoggedUser = () => {
-    if (loggedUser === null) {
-      return false;
-    }
+  /*
 
-    const userExists =
-      props.blog.user === undefined || props.blog.user === null
-        ? false
-        : loggedUser.username === props.blog.user.username;
 
-    console.log("USER EXISTS: ", userExists);
-    return userExists;
-  };
-
-  const increaseLikes = () => {
-    if (isLoggedUser()) {
-      dispatch(likeBlog(props.blog));
-    }
-  };
 
   const removeBlog = () => {
     if (
@@ -52,16 +50,51 @@ const Blog = (props) => {
     ) {
       dispatch(deleteBlog(props.blog));
     }
+  };*/
+
+  const isLoggedUser = () => {
+    if (props.user === null) {
+      return false;
+    }
+
+    const userExists =
+      blog.user === undefined || blog.user === null
+        ? false
+        : props.user.username === blog.user.username;
+
+    console.log("USER EXISTS: ", userExists);
+    return userExists;
+  };
+
+  const increaseLikes = () => {
+    if (isLoggedUser()) {
+      props.dispatch(likeBlog(blog));
+    }
   };
 
   return (
     <div>
+      <h1>blog app</h1>
+      <h2>{blog.title}</h2>
+      <p>
+        <a href="https://de.wikipedia.org/wiki/Saxophon">{blog.url}</a>
+      </p>
+      likes <span className="likes-content">{blog.likes}</span>{" "}
+      <button className="like-button" onClick={increaseLikes}>
+        like
+      </button>
+    </div>
+  );
+  /*return (
+    <div>
       <div style={blogStyle} key={props.blog.id}>
         <div className="title-author">
           {props.blog.title} {props.blog.author}
-          <button className="view-hide-button" onClick={toggleVisibility}>
-            {showAllBlogInformation ? "hide" : "view"}
-          </button>
+          {
+            <button className="view-hide-button" onClick={toggleVisibility}>
+              {showAllBlogInformation ? "hide" : "view"}
+            </button>
+          }
         </div>
         <div className="full-blog" style={viewShowHide}>
           <p>{props.blog.url} </p>
@@ -91,7 +124,7 @@ const Blog = (props) => {
         </div>
       </div>
     </div>
-  );
+  );*/
 };
 
 export default Blog;

@@ -9,16 +9,31 @@ import {
 import BlogForm from "./BlogForm";
 import Users from "./Users";
 import User from "./User";
+import Blogs from "./Blogs";
+import { initializeBlogPosts } from "../reducers/blogReducer";
+import Blog from "./Blog";
 
 const Menu = (props) => {
   const padding = {
     padding: 5,
   };
 
+  const blogStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: "solid",
+    borderWidth: 1,
+    marginBottom: 5,
+  };
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(initializeUsers());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(initializeBlogPosts());
   }, [dispatch]);
 
   const logoutChange = () => {
@@ -31,11 +46,17 @@ const Menu = (props) => {
 
   const user = useSelector((state) => state.user.user);
 
+  const blogs = useSelector((state) => state.blogs);
+
+  console.log("BLOGS: ", blogs);
+  console.log("USER: ", user);
+  console.log("USERS: ", users);
+
   return (
     <div>
       <Router>
         <div>
-          <Link style={padding} to="/">
+          <Link style={padding} to="/blogs">
             blogs
           </Link>
           <Link style={padding} to="/users">
@@ -60,6 +81,14 @@ const Menu = (props) => {
             />
             <Route path="/users" element={<Users users={users} />} />
             <Route path="/users/:id" element={<User users={users} />} />
+            <Route
+              path="/blogs"
+              element={<Blogs blogstyle={blogStyle} blogs={blogs} />}
+            />
+            <Route
+              path="/blogs/:id"
+              element={<Blog user={user} blogs={blogs} dispatch={dispatch} />}
+            />
           </Routes>
         </div>
       </Router>
