@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { setNotification } from "../reducers/notificationReducer";
 
 import { createBlog, initializeBlogPosts } from "../reducers/blogReducer";
-import { logoutUser } from "../reducers/userReducer";
 
 const BlogForm = (props) => {
   const [newTitle, setNewTitle] = useState("");
@@ -15,7 +14,7 @@ const BlogForm = (props) => {
 
   const dispatch = useDispatch();
 
-  const user = useSelector((state) => state.users.user);
+  const user = useSelector((state) => state.user.user);
 
   useEffect(() => {
     dispatch(initializeBlogPosts());
@@ -28,11 +27,6 @@ const BlogForm = (props) => {
   };
   const showWhenVisible = {
     display: blogVisible ? "" : "none",
-  };
-
-  const logoutChange = () => {
-    dispatch(logoutUser(null));
-    window.localStorage.removeItem("loggedBlogUser");
   };
 
   const createNewBlog = async (event) => {
@@ -70,11 +64,14 @@ const BlogForm = (props) => {
   return (
     <div className="formDiv">
       <h2>Blogs</h2>
+
       <Notification cssClass={props.cssClass} />
-      <div>{user ? user.username : ""} logged in</div>
-      <button type="submit" onClick={logoutChange}>
+      {/*<div>{user ? user.username : ""} logged in</div>*/}
+
+      {/*<button type="submit" onClick={logoutChange}>
         logout
-      </button>
+  </button>*/}
+
       <h2>create new</h2>
       <div style={hideWhenVisible}>
         <button className="create-button" onClick={() => setBlogVisible(true)}>

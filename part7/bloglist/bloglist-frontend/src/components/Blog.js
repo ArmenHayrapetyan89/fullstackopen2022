@@ -1,9 +1,13 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { deleteBlog, likeBlog } from "../reducers/blogReducer";
+import { useSelector } from "react-redux";
 
 const Blog = (props) => {
   const [showAllBlogInformation, setShowAllBlogInformation] = useState(false);
+
+  const loggedUser = useSelector((state) => state.user.user);
+
   const dispatch = useDispatch();
 
   const blogStyle = {
@@ -23,10 +27,6 @@ const Blog = (props) => {
   };
 
   const isLoggedUser = () => {
-    const loggedUser = JSON.parse(
-      window.localStorage.getItem("loggedBlogUser")
-    );
-
     if (loggedUser === null) {
       return false;
     }

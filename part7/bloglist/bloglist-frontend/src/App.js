@@ -1,6 +1,7 @@
 import { useState } from "react";
 
-import BlogForm from "./components/BlogForm";
+//import BlogForm from "./components/BlogForm";
+import Menu from "./components/Menu";
 import LoginForm from "./components/LoginForm";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -11,7 +12,7 @@ const App = () => {
   const [cssClass, setCssClass] = useState("");
   const dispatch = useDispatch();
 
-  const user = useSelector((state) => state.users.user);
+  const user = useSelector((state) => state.user.user);
 
   useEffect(() => {
     dispatch(checkUserLoggedIn());
@@ -23,9 +24,7 @@ const App = () => {
         <LoginForm cssClass={cssClass} setCssClass={setCssClass} />
       )}
 
-      {user !== null && (
-        <BlogForm cssClass={cssClass} setCssClass={setCssClass} />
-      )}
+      {user !== null && <Menu cssClass={cssClass} setCssClass={setCssClass} />}
     </div>
   );
 };
