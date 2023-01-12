@@ -29,6 +29,10 @@ const blogSlice = createSlice({
           : blog
       );
     },
+    commentBlogs: (state, action) => {
+      console.log("ACTION COMMENT BLOG: ", action.payload);
+      return state;
+    },
   },
 });
 
@@ -39,9 +43,9 @@ export const initializeBlogPosts = () => {
   };
 };
 
-export const createBlog = (title, author, url) => {
+export const createBlog = (title, author, url, comments) => {
   return async (dispatch) => {
-    const newBlog = await blogService.create(title, author, url);
+    const newBlog = await blogService.create(title, author, url, comments);
     dispatch(appendBlog(newBlog));
   };
 };
@@ -59,6 +63,14 @@ export const likeBlog = (blog) => {
     dispatch(likeBlogs(blog));
   };
 };
+
+export const commentBlog = (blog) => {
+  return async (dispatch) => {
+    const updatedBlog = await blogService.update(blog);
+    dispatch(commentBlogs(updatedBlog));
+  };
+};
 export default blogSlice.reducer;
 
-const { setBlogs, appendBlog, deleteBlogs, likeBlogs } = blogSlice.actions;
+const { setBlogs, appendBlog, deleteBlogs, likeBlogs, commentBlogs } =
+  blogSlice.actions;

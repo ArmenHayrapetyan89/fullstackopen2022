@@ -9,6 +9,7 @@ const BlogForm = (props) => {
   const [newTitle, setNewTitle] = useState("");
   const [newAuthor, setNewAuthor] = useState("");
   const [newUrl, setNewUrl] = useState("");
+  const [newComments, setNewComments] = useState([]);
   const [blogVisible, setBlogVisible] = useState(false);
 
   //const dispatch = useDispatch();
@@ -34,11 +35,12 @@ const BlogForm = (props) => {
     if (blogVisible) {
       if (props.user) {
         try {
-          props.dispatch(createBlog(newTitle, newAuthor, newUrl));
+          props.dispatch(createBlog(newTitle, newAuthor, newUrl, newComments));
 
           setNewTitle("");
           setNewAuthor("");
           setNewUrl("");
+          setNewComments([]);
 
           props.dispatch(
             setNotification(`a new blog ${newTitle} by ${newAuthor} added`, 5)
@@ -50,7 +52,7 @@ const BlogForm = (props) => {
         }
       }
     } else {
-      props.dispatch(createBlog(newTitle, newAuthor, newUrl));
+      props.dispatch(createBlog(newTitle, newAuthor, newUrl, newComments));
     }
   };
 

@@ -7,7 +7,7 @@ const setToken = (newToken) => {
   token = `bearer ${newToken}`;
 };
 
-const create = async (title, author, url) => {
+const create = async (title, author, url, comments) => {
   const config = {
     headers: { Authorization: token },
   };
@@ -16,6 +16,7 @@ const create = async (title, author, url) => {
     title,
     author,
     url,
+    comments,
   };
 
   const response = await axios.post(baseUrl, newObject, config);
@@ -45,5 +46,15 @@ const deleteObject = async (id) => {
 
   return response.data;
 };
+
+/*const commentBlog = async (blog) => {
+  const config = {
+    headers: { Authorization: token },
+  };
+
+  const response = await axios.put(`${baseUrl}/${blog.id}/comments`, config);
+
+  return response.data;
+};*/
 
 export default { getAll, setToken, create, update, deleteObject };

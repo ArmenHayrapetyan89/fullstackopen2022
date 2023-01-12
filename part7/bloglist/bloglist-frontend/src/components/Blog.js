@@ -3,7 +3,7 @@
 //import { useSelector } from "react-redux";
 
 import { useParams } from "react-router-dom";
-import { likeBlog } from "../reducers/blogReducer";
+import { commentBlog, likeBlog } from "../reducers/blogReducer";
 
 const Blog = (props) => {
   const id = useParams().id;
@@ -72,6 +72,10 @@ const Blog = (props) => {
     }
   };
 
+  const setComments = () => {
+    props.dispatch(commentBlog(blog));
+  };
+
   return (
     <div>
       <h1>blog app</h1>
@@ -79,10 +83,28 @@ const Blog = (props) => {
       <p>
         <a href="https://de.wikipedia.org/wiki/Saxophon">{blog.url}</a>
       </p>
-      likes <span className="likes-content">{blog.likes}</span>{" "}
+      <span className="likes-content">{blog.likes}</span> likes
       <button className="like-button" onClick={increaseLikes}>
         like
       </button>
+      <p>Added by {blog.user.name}</p>
+      <h3>Comments</h3>
+      <div>
+        <input
+          type="text"
+          value=""
+          name="Comments"
+          onChange={setComments}
+          className="url-field"
+        />
+      </div>
+      <div>
+        <ul>
+          {blog.comments.map((comment, index) => {
+            return <li key={index}>{comment}</li>;
+          })}
+        </ul>
+      </div>
     </div>
   );
   /*return (
