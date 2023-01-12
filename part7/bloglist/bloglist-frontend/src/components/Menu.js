@@ -56,7 +56,7 @@ const Menu = (props) => {
     <div>
       <Router>
         <div>
-          <Link style={padding} to="/blogs">
+          <Link style={padding} to="/">
             blogs
           </Link>
           <Link style={padding} to="/users">
@@ -73,18 +73,25 @@ const Menu = (props) => {
             <Route
               path="/"
               element={
-                <BlogForm
-                  cssClass={props.cssClass}
-                  setCssClass={props.setCssClass}
-                />
+                <div>
+                  <BlogForm
+                    cssClass={props.cssClass}
+                    setCssClass={props.setCssClass}
+                    dispatch={dispatch}
+                    user={user}
+                  />
+                  <Blogs blogstyle={blogStyle} blogs={blogs} />
+                </div>
               }
             />
-            <Route path="/users" element={<Users users={users} />} />
-            <Route path="/users/:id" element={<User users={users} />} />
             <Route
-              path="/blogs"
+              path="/"
               element={<Blogs blogstyle={blogStyle} blogs={blogs} />}
             />
+
+            <Route path="/users" element={<Users users={users} />} />
+            <Route path="/users/:id" element={<User users={users} />} />
+
             <Route
               path="/blogs/:id"
               element={<Blog user={user} blogs={blogs} dispatch={dispatch} />}

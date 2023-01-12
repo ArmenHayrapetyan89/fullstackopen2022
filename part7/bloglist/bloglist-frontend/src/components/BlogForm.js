@@ -1,10 +1,9 @@
-import Blog from "./Blog";
+//import Blog from "./Blog";
 import Notification from "../components/Notification";
-import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
 import { setNotification } from "../reducers/notificationReducer";
 
-import { createBlog, initializeBlogPosts } from "../reducers/blogReducer";
+import { createBlog } from "../reducers/blogReducer";
 
 const BlogForm = (props) => {
   const [newTitle, setNewTitle] = useState("");
@@ -12,15 +11,15 @@ const BlogForm = (props) => {
   const [newUrl, setNewUrl] = useState("");
   const [blogVisible, setBlogVisible] = useState(false);
 
-  const dispatch = useDispatch();
+  //const dispatch = useDispatch();
 
-  const user = useSelector((state) => state.user.user);
+  //const user = useSelector((state) => state.user.user);
 
-  useEffect(() => {
+  /*useEffect(() => {
     dispatch(initializeBlogPosts());
-  }, [dispatch]);
+  }, [dispatch]);*/
 
-  const blogs = useSelector((state) => state.blogs);
+  //const blogs = useSelector((state) => state.blogs);
 
   const hideWhenVisible = {
     display: blogVisible ? "none" : "",
@@ -33,15 +32,15 @@ const BlogForm = (props) => {
     event.preventDefault();
 
     if (blogVisible) {
-      if (user) {
+      if (props.user) {
         try {
-          dispatch(createBlog(newTitle, newAuthor, newUrl));
+          props.dispatch(createBlog(newTitle, newAuthor, newUrl));
 
           setNewTitle("");
           setNewAuthor("");
           setNewUrl("");
 
-          dispatch(
+          props.dispatch(
             setNotification(`a new blog ${newTitle} by ${newAuthor} added`, 5)
           );
 
@@ -51,18 +50,18 @@ const BlogForm = (props) => {
         }
       }
     } else {
-      dispatch(createBlog(newTitle, newAuthor, newUrl));
+      props.dispatch(createBlog(newTitle, newAuthor, newUrl));
     }
   };
 
-  const sortedBlogs = () => {
+  /*const sortedBlogs = () => {
     return [...blogs].sort(
       (firstLike, secondLike) => secondLike.likes - firstLike.likes
     );
-  };
+  };*/
 
   return (
-    <div className="formDiv">
+    <div className="form-div">
       <h2>Blogs</h2>
 
       <Notification cssClass={props.cssClass} />
@@ -117,7 +116,7 @@ const BlogForm = (props) => {
         </form>
       </div>
 
-      {sortedBlogs().length !== 0
+      {/*sortedBlogs().length !== 0
         ? sortedBlogs().map((blog) => (
             <Blog
               key={blog.id}
@@ -127,7 +126,7 @@ const BlogForm = (props) => {
               className="blog"
             />
           ))
-        : ""}
+        : ""*/}
     </div>
   );
 };
