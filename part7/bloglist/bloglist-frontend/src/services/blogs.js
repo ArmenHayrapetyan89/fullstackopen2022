@@ -47,14 +47,29 @@ const deleteObject = async (id) => {
   return response.data;
 };
 
-/*const commentBlog = async (blog) => {
+const commentUpdate = async (id, comment) => {
   const config = {
     headers: { Authorization: token },
   };
 
-  const response = await axios.put(`${baseUrl}/${blog.id}/comments`, config);
+  const newComment = { comments: comment };
+
+  const response = await axios.put(
+    `${baseUrl}/${id}/comments`,
+    newComment,
+    config
+  );
+
+  console.log("RESPONSE DATA: ", response.data);
 
   return response.data;
-};*/
+};
 
-export default { getAll, setToken, create, update, deleteObject };
+export default {
+  getAll,
+  setToken,
+  create,
+  update,
+  deleteObject,
+  commentUpdate,
+};

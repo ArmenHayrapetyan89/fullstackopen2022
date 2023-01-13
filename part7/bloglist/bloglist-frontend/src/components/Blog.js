@@ -4,9 +4,11 @@
 
 import { useParams } from "react-router-dom";
 import { commentBlog, likeBlog } from "../reducers/blogReducer";
+import { useState } from "react";
 
 const Blog = (props) => {
   const id = useParams().id;
+  const [commentValue, setCommentValue] = useState("");
 
   if (!props.blogs || props.blogs === 0) {
     return <div>Loading...</div>;
@@ -72,8 +74,14 @@ const Blog = (props) => {
     }
   };
 
-  const setComments = () => {
-    props.dispatch(commentBlog(blog));
+  const handleCommentChange = (event) => {
+    setCommentValue(event.target.value);
+  };
+
+  const handleCommentSubmit = (event) => {
+    event.preventDefault();
+    props.dispatch(commentBlog(blog, commentValue));
+    setCommentValue("");
   };
 
   return (
@@ -90,13 +98,16 @@ const Blog = (props) => {
       <p>Added by {blog.user.name}</p>
       <h3>Comments</h3>
       <div>
-        <input
-          type="text"
-          value=""
-          name="Comments"
-          onChange={setComments}
-          className="url-field"
-        />
+        <form onSubmit={handleCommentSubmit}>
+          <input
+            type="text"
+            value={commentValue}
+            name="Comments"
+            onChange={handleCommentChange}
+            className="url-field"
+          />{" "}
+          <button type="submit">add comment</button>
+        </form>
       </div>
       <div>
         <ul>
