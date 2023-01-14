@@ -2,6 +2,8 @@ import { useParams } from "react-router-dom";
 import { commentBlog, likeBlog } from "../reducers/blogReducer";
 import { useState } from "react";
 
+import { Button } from "react-bootstrap";
+
 const Blog = (props) => {
   const id = useParams().id;
   const [commentValue, setCommentValue] = useState("");
@@ -26,6 +28,7 @@ const Blog = (props) => {
         ? false
         : props.user.username === blog.user.username;
 
+    console.log("USER EXISTS: ", userExists);
     return userExists;
   };
 
@@ -53,9 +56,9 @@ const Blog = (props) => {
         <a href="https://de.wikipedia.org/wiki/Saxophon">{blog.url}</a>
       </p>
       <span className="likes-content">{blog.likes}</span> likes
-      <button className="like-button" onClick={increaseLikes}>
+      <Button className="like-button" onClick={increaseLikes}>
         like
-      </button>
+      </Button>
       <p>Added by {blog.user.name}</p>
       <h3>Comments</h3>
       <div>
@@ -67,7 +70,7 @@ const Blog = (props) => {
             onChange={handleCommentChange}
             className="url-field"
           />{" "}
-          <button type="submit">add comment</button>
+          <Button type="submit">add comment</Button>
         </form>
       </div>
       <div>
@@ -79,46 +82,6 @@ const Blog = (props) => {
       </div>
     </div>
   );
-  /*return (
-    <div>
-      <div style={blogStyle} key={props.blog.id}>
-        <div className="title-author">
-          {props.blog.title} {props.blog.author}
-          {
-            <button className="view-hide-button" onClick={toggleVisibility}>
-              {showAllBlogInformation ? "hide" : "view"}
-            </button>
-          }
-        </div>
-        <div className="full-blog" style={viewShowHide}>
-          <p>{props.blog.url} </p>
-          <p>
-            likes <span className="likesContent">{props.blog.likes}</span>{" "}
-            <button
-              className="like-button"
-              onClick={() => {
-                increaseLikes();
-              }}
-            >
-              like
-            </button>
-          </p>
-          <p>
-            {props.blog.user === undefined || props.blog.user === null
-              ? ""
-              : props.blog.user.username}
-          </p>
-          {isLoggedUser() ? (
-            <button className="delete-blog" onClick={() => removeBlog()}>
-              remove
-            </button>
-          ) : (
-            ""
-          )}
-        </div>
-      </div>
-    </div>
-  );*/
 };
 
 export default Blog;

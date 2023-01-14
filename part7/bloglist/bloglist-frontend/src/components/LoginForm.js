@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUsername, setPassword } from "../reducers/loginReducer";
 import { setNotification } from "../reducers/notificationReducer";
 import { setUserCredentials } from "../reducers/userReducer";
+import { Button, Form } from "react-bootstrap";
 
 const LoginForm = (props) => {
   const dispatch = useDispatch();
@@ -40,31 +41,32 @@ const LoginForm = (props) => {
     <div>
       <h2>log in to application</h2>
       <Notification cssClass={props.cssClass} message={props.errorMessage} />
-      <form onSubmit={(event) => handleLogin(event, username, password)}>
-        <div>
-          username{" "}
-          <input
+      <Form onSubmit={(event) => handleLogin(event, username, password)}>
+        <Form.Group>
+          <Form.Label>username</Form.Label>
+          <Form.Control
+            style={{ width: "20%" }}
             type="text"
             value={username}
             name="Username"
             onChange={usernameForLogin}
             id="username"
           />
-        </div>
-        <div>
-          password{" "}
-          <input
+          <Form.Label>password</Form.Label>
+          <Form.Control
+            style={{ width: "20%" }}
             type="password"
             value={password}
             name="Password"
             onChange={passwordForLogin}
             id="password"
           />
-        </div>
-        <button id="login-button" type="submit">
-          login
-        </button>
-      </form>
+
+          <Button id="login-button" type="submit">
+            login
+          </Button>
+        </Form.Group>
+      </Form>
     </div>
   );
 };

@@ -12,6 +12,7 @@ import User from "./User";
 import Blogs from "./Blogs";
 import { initializeBlogPosts } from "../reducers/blogReducer";
 import Blog from "./Blog";
+import { Button } from "react-bootstrap";
 
 const Menu = (props) => {
   const padding = {
@@ -61,9 +62,9 @@ const Menu = (props) => {
           <div>
             <div>{user ? user.username : ""} logged in</div>
 
-            <button type="submit" onClick={logoutChange}>
+            <Button type="submit" onClick={logoutChange}>
               logout
-            </button>
+            </Button>
           </div>
           <Routes>
             <Route
