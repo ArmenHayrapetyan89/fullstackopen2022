@@ -1,7 +1,3 @@
-//import { useState } from "react";
-//import { deleteBlog, likeBlog } from "../reducers/blogReducer";
-//import { useSelector } from "react-redux";
-
 import { useParams } from "react-router-dom";
 import { commentBlog, likeBlog } from "../reducers/blogReducer";
 import { useState } from "react";
@@ -16,43 +12,9 @@ const Blog = (props) => {
 
   const blog = props.blogs.find((blog) => blog.id === id);
 
-  console.log("BLOG: ", blog);
-
   if (!blog) {
     return <div>Loading...</div>;
   }
-
-  //const [showAllBlogInformation, setShowAllBlogInformation] = useState(false);
-
-  //const loggedUser = useSelector((state) => state.user.user);
-
-  /*const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: "solid",
-    borderWidth: 1,
-    marginBottom: 5,
-  };*/
-
-  /*const viewShowHide = {
-    display: showAllBlogInformation ? "" : "none",
-  };*/
-
-  /*const toggleVisibility = () => {
-    setShowAllBlogInformation(!showAllBlogInformation);
-  };*/
-
-  /*
-
-
-
-  const removeBlog = () => {
-    if (
-      window.confirm(`Removing ${props.blog.title} by ${props.blog.author}`)
-    ) {
-      dispatch(deleteBlog(props.blog));
-    }
-  };*/
 
   const isLoggedUser = () => {
     if (props.user === null) {
@@ -64,7 +26,6 @@ const Blog = (props) => {
         ? false
         : props.user.username === blog.user.username;
 
-    console.log("USER EXISTS: ", userExists);
     return userExists;
   };
 

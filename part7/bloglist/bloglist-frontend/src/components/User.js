@@ -10,8 +10,6 @@ const User = (props) => {
 
   const blogs = [...actualUser.blogs];
 
-  console.log("BLOGS: ", blogs);
-
   return (
     <div>
       <h2>{actualUser.name}</h2>

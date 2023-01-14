@@ -1,4 +1,3 @@
-//import Blog from "./Blog";
 import Notification from "../components/Notification";
 import { useState } from "react";
 import { setNotification } from "../reducers/notificationReducer";
@@ -11,16 +10,6 @@ const BlogForm = (props) => {
   const [newUrl, setNewUrl] = useState("");
   const [newComments, setNewComments] = useState([]);
   const [blogVisible, setBlogVisible] = useState(false);
-
-  //const dispatch = useDispatch();
-
-  //const user = useSelector((state) => state.user.user);
-
-  /*useEffect(() => {
-    dispatch(initializeBlogPosts());
-  }, [dispatch]);*/
-
-  //const blogs = useSelector((state) => state.blogs);
 
   const hideWhenVisible = {
     display: blogVisible ? "none" : "",
@@ -56,22 +45,11 @@ const BlogForm = (props) => {
     }
   };
 
-  /*const sortedBlogs = () => {
-    return [...blogs].sort(
-      (firstLike, secondLike) => secondLike.likes - firstLike.likes
-    );
-  };*/
-
   return (
     <div className="form-div">
       <h2>Blogs</h2>
 
       <Notification cssClass={props.cssClass} />
-      {/*<div>{user ? user.username : ""} logged in</div>*/}
-
-      {/*<button type="submit" onClick={logoutChange}>
-        logout
-  </button>*/}
 
       <h2>create new</h2>
       <div style={hideWhenVisible}>
@@ -117,18 +95,6 @@ const BlogForm = (props) => {
           <button onClick={() => setBlogVisible(false)}>cancel</button>
         </form>
       </div>
-
-      {/*sortedBlogs().length !== 0
-        ? sortedBlogs().map((blog) => (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              showAllBlogInformation={props.showAllBlogInformation}
-              setShowAllBlogInformation={props.setShowAllBlogInformation}
-              className="blog"
-            />
-          ))
-        : ""*/}
     </div>
   );
 };

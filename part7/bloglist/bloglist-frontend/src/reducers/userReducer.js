@@ -15,7 +15,6 @@ const userSlice = createSlice({
       };
     },
     setUsersLogout: (state, action) => {
-      console.log("ACTION: ", action.payload);
       return {
         ...state,
         user: action.payload,
@@ -27,7 +26,6 @@ const userSlice = createSlice({
 export const setUserCredentials = (credentials) => {
   return async (dispatch) => {
     const loggedUser = await loginService.login(credentials);
-    console.log("USER IN SETUSER: ", loggedUser);
     window.localStorage.setItem("loggedBlogUser", JSON.stringify(loggedUser));
     dispatch(userCredentials(loggedUser));
   };

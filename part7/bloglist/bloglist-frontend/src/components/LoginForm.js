@@ -14,15 +14,11 @@ const LoginForm = (props) => {
   const handleLogin = async (event, username, password) => {
     event.preventDefault();
 
-    console.log("USERNAME: ", username);
-    console.log("PASSWORD: ", password);
-
     try {
       dispatch(setUserCredentials({ username, password }));
       dispatch(setUsername(""));
       dispatch(setPassword(""));
     } catch (error) {
-      console.log("ERROR: ", error);
       props.setCssClass("error");
       dispatch(setNotification("Wrong username or password", 5));
     }

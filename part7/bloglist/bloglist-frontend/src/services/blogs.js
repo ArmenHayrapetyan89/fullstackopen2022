@@ -60,8 +60,6 @@ const commentUpdate = async (id, comment) => {
     config
   );
 
-  console.log("RESPONSE DATA: ", response.data);
-
   return response.data;
 };
 

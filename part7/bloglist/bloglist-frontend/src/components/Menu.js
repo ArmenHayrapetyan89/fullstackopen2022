@@ -48,10 +48,6 @@ const Menu = (props) => {
 
   const blogs = useSelector((state) => state.blogs);
 
-  console.log("BLOGS: ", blogs);
-  console.log("USER: ", user);
-  console.log("USERS: ", users);
-
   return (
     <div>
       <Router>
