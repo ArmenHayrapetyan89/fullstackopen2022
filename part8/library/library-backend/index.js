@@ -111,25 +111,25 @@ const typeDefs = gql`
     addBook(
       title: String
       author: String
-      published: Int
+      published: String
       genres: [String]
     ): Books
   }
 
   type Mutation {
-    editAuthor(name: String, setBornTo: Int): [Authors]
+    editAuthor(name: String, setBornTo: String): [Authors]
   }
 
   type Books {
     title: String
     author: String
-    published: Int
+    published: String
     genres: [String]
   }
 
   type Authors {
     name: String
-    born: Int
+    born: String
     bookCount: Int
     title: String
   }
@@ -140,7 +140,8 @@ const resolvers = {
     bookCount: () => books.length,
     authorCount: () => authors.length,
     allBooks: (root, args) => {
-      return books.filter((book) => book.genres.includes(args.genre));
+      return books;
+      //return books.filter((book) => book.genres.includes(args.genre));
     },
     allAuthors: () => {
       let countedBooks = books.reduce((accumulator, book) => {
@@ -175,19 +176,20 @@ const resolvers = {
 
     editAuthor: (root, args) => {
       const filteredAuthors = authors.filter(
-        (author) =>
-          author.name.toLocaleLowerCase() === args.name.toLocaleLowerCase()
+        (author) => author.name.toLowerCase() === args.name.toLowerCase()
       );
 
       if (filteredAuthors.length === 0) {
         return null;
       }
 
-      return authors.map((author) =>
-        author.name.toLocaleLowerCase() === args.name.toLocaleLowerCase()
+      authors = authors.map((author) =>
+        author.name.toLowerCase() === args.name.toLowerCase()
           ? { ...author, born: args.setBornTo }
           : author
       );
+
+      return authors;
     },
   },
 };
