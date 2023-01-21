@@ -5,11 +5,10 @@ const Book = require("./models/book");
 const Author = require("./models/author");
 const User = require("./models/user");
 const jwt = require("jsonwebtoken");
-
+require("dotenv").config();
 const JWT_SECRET = "password";
 
-const MONGODB_URI =
-  "mongodb+srv://fullstackopen2022:fullstackopen2022@cluster0.sxv0nzg.mongodb.net/book_author?retryWrites=true&w=majority";
+const MONGODB_URI = process.env.MONGODB_URI;
 
 console.log("connecting to", MONGODB_URI);
 
@@ -182,7 +181,12 @@ const resolvers = {
       return await Author.countDocuments();
     },
     allBooks: async (root, args) => {
-      return await Book.find({}).populate("author");
+      if (Object.keys(args).length === 0 || args.genre === "all") {
+        return await Book.find({}).populate("author");
+      }
+      return await Book.find({ genres: { $in: [args.genre] } }).populate(
+        "author"
+      );
     },
     allAuthors: async () => {
       return await Author.aggregate([
@@ -238,7 +242,6 @@ const resolvers = {
     addBook: async (root, args, context) => {
       if (context.currentUser !== undefined) {
         const author = await Author.findOne({ name: args.author });
-
         if (!author) {
           throw new UserInputError(`Author ${args.author} not found!`);
         }
