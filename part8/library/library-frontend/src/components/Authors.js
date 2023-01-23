@@ -1,4 +1,4 @@
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { useState } from "react";
 import Select from "react-select";
 import { ALL_AUTHORS, UPDATE_BIRTHYEAR } from "./queries";
@@ -73,7 +73,7 @@ const Authors = (props) => {
           born
           <input
             value={birthyear}
-            onChange={({ target }) => setBirthyear(target.value)}
+            onChange={({ target }) => setBirthyear(Number(target.value))}
           />
         </div>
         <button>updateAuthor</button>

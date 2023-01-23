@@ -23,7 +23,7 @@ const Recommend = (props) => {
     return book.genres.includes(user.favouriteGenre);
   });*/
 
-  console.log("FILTER BY GENRE: ", filterByGenre.data.allBooks);
+  //console.log("FILTER BY GENRE: ", filterByGenre.data.allBooks);
 
   const books = [...filterByGenre.data.allBooks];
 

@@ -5,6 +5,7 @@ import { ALL_BOOKS, FILTER_BOOKS } from "./queries";
 const Books = (props) => {
   const booksQuery = useQuery(ALL_BOOKS, { pollInterval: 2000 });
   //const [filterGenre, setFilterGenre] = useState([]);
+
   const [filterGenre, setFilterGenre] = useState("");
   const filterByGenre = useQuery(FILTER_BOOKS, {
     variables: { genre: filterGenre },
@@ -16,13 +17,13 @@ const Books = (props) => {
 
   const books = [...booksQuery.data.allBooks];
 
-  const genres = books.flatMap((book) => book.genres);
+  const genresSet = new Set(books.flatMap((book) => book.genres));
+
+  const genres = [...genresSet];
 
   if (!props.show) {
     return null;
   }
-
-  //console.log("FILTERBY GENRE: ", );
 
   const handleFilterGenre = (genre) => {
     setFilterGenre(genre);
