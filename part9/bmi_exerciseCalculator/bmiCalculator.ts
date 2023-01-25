@@ -1,29 +1,43 @@
-const calculateBmi = (height: number, weight: number): string => {
-  const result = weight / ((height / 100) * (height / 100));
+export const calculateBmi = (height: number, weight: number): string => {
+  const bmi = weight / ((height / 100) * (height / 100));
+  //let answer = "";
 
-  console.log("RESULT: ", result);
   switch (true) {
-    case result < 16:
+    case bmi < 16:
+      /*answer = "Severe Thinness";
+      break;*/
       return "Severe Thinness";
-    case result < 18.5:
+    case bmi < 18.5:
+      /*answer = "Moderate Thinness";
+      break;*/
       return "Moderate Thinness";
-    case result < 25:
+    case bmi < 25:
+      /*answer = "Normal";
+      break;*/
       return "Normal";
-    case result < 30:
+    case bmi < 30:
+      /* answer = "Overweight";
+      break;*/
       return "Overweight";
-    case result < 35:
+    case bmi < 35:
+      /*answer = "Obese Class I";
+      break;*/
       return "Obese Class I";
-    case result < 40:
+    case bmi < 40:
+      /*answer = "Obese Class II";
+      break;*/
       return "Obese Class II";
-    case result > 40:
+    case bmi > 40:
+      /*answer = "Obese Class III";
+      break;*/
       return "Obese Class III";
     default:
       throw new Error("wrong parameters");
   }
 };
 
-const height: number = Number(process.argv[2]);
-const weight: number = Number(process.argv[3]);
+const height = Number(process.argv[2]);
+const weight = Number(process.argv[3]);
 
 if (isNaN(height) || isNaN(weight) || height === 0) {
   console.log("Please enter a valid number!");

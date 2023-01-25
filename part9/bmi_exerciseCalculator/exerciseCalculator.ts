@@ -8,7 +8,10 @@ interface Result {
   average: number;
 }
 
-const exerciseCalculator = (hours: Array<number>, target: number): Result => {
+export const exerciseCalculator = (
+  hours: Array<number>,
+  target: number
+): Result => {
   hours.map((hour) => {
     if (isNaN(Number(hour))) {
       throw new Error("Provided values were not numbers!");
@@ -50,8 +53,8 @@ const exerciseCalculator = (hours: Array<number>, target: number): Result => {
   };
 };
 
-try {
-  const target: number = Number(process.argv[2]);
+/*try {
+  const target = Number(process.argv[2]);
   const inputArguments = process.argv.slice(3);
   const training = inputArguments.map((exercise) => Number(exercise));
   console.log(exerciseCalculator(training, target));
@@ -62,5 +65,4 @@ try {
   }
   console.log(errorMessage);
 }
-
-//2 3 0 2 4.5 0 3 1
+*/
