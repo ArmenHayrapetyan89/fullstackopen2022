@@ -27,8 +27,16 @@ const getEntries = (): Patient[] => {
       ssn,
       gender: convertGender(gender),
       occupation,
+      entries: [],
     })
   );
+};
+
+const findById = (id: string): Patient => {
+  const patient = patientData.find((patient) => patient.id === id);
+  if (patient) {
+    return { ...patient, gender: convertGender(patient.gender), entries: [] };
+  } else throw new Error(`Patient with id ${id} not found`);
 };
 
 const getNonSensitivePatientsEntries = (): NonSensitivePatientEntry[] => {
@@ -56,4 +64,5 @@ export default {
   getEntries,
   addPatient,
   getNonSensitivePatientsEntries,
+  findById,
 };
