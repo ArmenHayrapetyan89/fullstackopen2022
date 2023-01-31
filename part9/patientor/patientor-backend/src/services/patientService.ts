@@ -1,4 +1,6 @@
-import patientData from "../../data/patients.json";
+//import patientData from "../../data/patients.json";
+import patientData from "../../data/patients";
+
 import {
   Patient,
   NonSensitivePatientEntry,
@@ -20,22 +22,23 @@ const convertGender = (gender: any): Gender => {
 
 const getEntries = (): Patient[] => {
   return patientData.map(
-    ({ id, name, dateOfBirth, ssn, gender, occupation }) => ({
+    ({ id, name, dateOfBirth, ssn, gender, occupation, entries }) => ({
       id,
       name,
       dateOfBirth,
       ssn,
       gender: convertGender(gender),
       occupation,
-      entries: [],
+      entries,
     })
   );
 };
 
 const findById = (id: string): Patient => {
   const patient = patientData.find((patient) => patient.id === id);
+
   if (patient) {
-    return { ...patient, gender: convertGender(patient.gender), entries: [] };
+    return patient;
   } else throw new Error(`Patient with id ${id} not found`);
 };
 

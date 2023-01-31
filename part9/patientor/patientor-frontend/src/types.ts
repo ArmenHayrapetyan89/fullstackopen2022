@@ -1,10 +1,10 @@
-export interface Diagnose {
+export interface Diagnosis {
   code: string;
   name: string;
   latin?: string;
 }
 
-export type NonSensitiveDiagnoseEntry = Omit<Diagnose, "latin">;
+export type NonSensitiveDiagnoseEntry = Omit<Diagnosis, "latin">;
 
 export enum Gender {
   Male = "Male",
@@ -69,6 +69,5 @@ export interface Patient {
 }
 
 export type NonSensitivePatientEntry = Omit<Patient, "ssn" | "entries">;
-//export type PublicPatient = Omit<Patient, "ssn" | "entries">;
 
 export type NewPatientEntry = Omit<Patient, "id">;
